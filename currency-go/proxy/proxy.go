@@ -17,12 +17,21 @@
 package proxy
 
 import (
+	"bytes"
+	"errors"
+	"net/http"
+
 	"github.com/btcsuite/btcd/btcjson"
 	"github.com/katzenpost/server_plugins/currency-go/common"
 	"github.com/katzenpost/server_plugins/currency-go/config"
+	"github.com/ugorji/go/codec"
+	"gopkg.in/op/go-logging.v1"
 )
 
+var errInvalidCurrencyRequest = errors.New("kaetzchen/currency: invalid request")
+
 type Currency struct {
+	log        *logging.Logger
 	jsonHandle codec.JsonHandle
 
 	ticker  string
@@ -31,9 +40,65 @@ type Currency struct {
 	rpcUrl  string
 }
 
-func (Currency) OnRequest(payload string) (string, error) {
+func (k *Currency) OnRequest(payload []byte, hasSURB bool) ([]byte, error) {
+	if hasSURB {
+		k.log.Debug("Ignoring request: erroneously contains a SURB.")
+		return nil, errInvalidCurrencyRequest
+	}
 
-	return payload, nil // XXX fix me
+	k.log.Debug("Handling request")
+
+	// Parse out the request payload.
+	var req common.CurrencyRequest
+	dec := codec.NewDecoderBytes(bytes.TrimRight(payload, "\x00"), &k.jsonHandle)
+	if err := dec.Decode(&req); err != nil {
+		k.log.Debugf("Failed to decode request: (%v)", err)
+		return nil, errInvalidCurrencyRequest
+	}
+
+	// Sanity check the request.
+	if req.Version != common.CurrencyVersion {
+		k.log.Debugf("Failed to parse request: (invalid version: %v)", req.Version)
+		return nil, errInvalidCurrencyRequest
+	}
+	if req.Ticker != k.ticker {
+		k.log.Debugf("Failed to parse request: (currency ticker mismatch: %v)", req.Ticker)
+		return nil, errInvalidCurrencyRequest
+	}
+
+	// Send request to HTTP RPC.
+	err := k.sendTransaction(req.Tx)
+	if err != nil {
+		k.log.Debug("Failed to send currency transaction request: (%v)", err)
+	}
+	return nil, errInvalidCurrencyRequest
+}
+
+func (k *Currency) sendTransaction(txHex string) error {
+	k.log.Debug("sendTransaction")
+
+	// marshall new transaction blob
+	allowHighFees := true
+	cmd := btcjson.NewSendRawTransactionCmd(txHex, &allowHighFees)
+	txId := 0 // this txId is not important
+	marshalledJSON, err := btcjson.MarshalCmd(txId, cmd)
+	bodyReader := bytes.NewReader(marshalledJSON)
+
+	// create an http request
+	httpReq, err := http.NewRequest("POST", k.rpcUrl, bodyReader)
+	if err != nil {
+		return err
+	}
+	httpReq.Close = true
+	httpReq.Header.Set("Content-Type", "application/json")
+	httpReq.SetBasicAuth(k.rpcUser, k.rpcPass)
+
+	// send http request
+	client := http.Client{}
+	httpResponse, err := client.Do(httpReq)
+	k.log.Debugf("currency RPC response status: %s", httpResponse.Status)
+
+	return err
 }
 
 func New(config *config.Config) *Currency {
