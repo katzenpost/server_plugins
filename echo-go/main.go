@@ -46,14 +46,26 @@ func setupLoggerBackend(level logging.Level, writer io.Writer) logging.LeveledBa
 	return leveler
 }
 
-type Echo struct{}
+type Echo struct {
+	params map[string]string
+}
 
-func (Echo) OnRequest(payload []byte, hasSURB bool) ([]byte, error) {
+func (e *Echo) OnRequest(payload []byte, hasSURB bool) ([]byte, error) {
 	log.Debugf("OnRequest invoked, hasSURB is %v", hasSURB)
 	if !hasSURB {
 		return nil, errors.New("request received without SURB, error")
 	}
 	return payload, nil
+}
+
+func (e *Echo) Parameters() (map[string]string, error) {
+	return e.params, nil
+}
+
+func New() *Echo {
+	return &Echo{
+		params: make(map[string]string),
+	}
 }
 
 func main() {
@@ -91,7 +103,7 @@ func main() {
 	plugin.Serve(&plugin.ServeConfig{
 		HandshakeConfig: common.Handshake,
 		Plugins: map[string]plugin.Plugin{
-			common.KaetzchenService: &common.KaetzchenPlugin{Impl: &Echo{}},
+			common.KaetzchenService: &common.KaetzchenPlugin{Impl: New()},
 		},
 		GRPCServer: plugin.DefaultGRPCServer,
 	})
