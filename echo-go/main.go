@@ -58,7 +58,7 @@ func (e *Echo) OnRequest(payload []byte, hasSURB bool) ([]byte, error) {
 	return payload, nil
 }
 
-func (e *Echo) Parameters() (map[string]string, error) {
+func (e *Echo) Parameters(unused []byte) (map[string]string, error) {
 	return e.params, nil
 }
 
