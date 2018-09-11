@@ -26,6 +26,13 @@ use std::collections::HashMap;
 use echo_rust::proto::kaetzchen::{Request, Response, Params, Empty};
 use echo_rust::proto::kaetzchen_grpc::{KaetzchenServer, Kaetzchen};
 
+/// CORE_PROTOCOL_VERSION must match the plugin protocol version
+/// that the server's go-plugin library is using.
+const CORE_PROTOCOL_VERSION: usize = 1;
+
+/// KAETZENPOST_PLUGIN_VERSION must match the
+/// Katzenpost server plugin protocol version.
+const KAETZENPOST_PLUGIN_VERSION: usize = 1;
 
 struct Echo {
     params: HashMap<String, String>,
@@ -115,7 +122,7 @@ fn main() {
     server.http.set_cpu_pool_threads(4);
     let _server = server.build().expect("server");
 
-    println!("1|1|unix|{}|grpc", socket);
+    println!("{}|{}|unix|{}|grpc", CORE_PROTOCOL_VERSION, KAETZENPOST_PLUGIN_VERSION, socket);
 
     loop {
         thread::park();

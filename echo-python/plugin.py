@@ -22,6 +22,13 @@ class NoSURBException(Exception):
     is received that does not contain a SURB.
     """
 
+# CORE_PROTOCOL_VERSION is the plugin version used by
+# the Katzenpost server's go-plugin library.
+CORE_PROTOCOL_VERSION = 1
+
+# KAETZENPOST_PROTOCOL_VERSION is the protocol version
+# used by the Kaetzchen plugin system.
+KAETZENPOST_PROTOCOL_VERSION = 1
 
 class EchoServicer(kaetzchen_pb2_grpc.KaetzchenServicer):
 
@@ -66,7 +73,7 @@ def main():
     server.start()
 
     # Output information
-    print("1|1|unix|%s|grpc" % socket)
+    print("%s|%s|unix|%s|grpc" % (CORE_PROTOCOL_VERSION, KAETZENPOST_PROTOCOL_VERSION, socket))
     sys.stdout.flush()
 
     try:

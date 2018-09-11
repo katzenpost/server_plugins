@@ -9,7 +9,7 @@ import (
 	"path"
 
 	"github.com/hashicorp/go-plugin"
-	common "github.com/katzenpost/server/common-plugin"
+	common "github.com/katzenpost/server/plugin"
 	"github.com/op/go-logging"
 )
 
