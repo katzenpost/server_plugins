@@ -50,15 +50,15 @@ type Echo struct {
 	params map[string]string
 }
 
-func (e *Echo) OnRequest(payload []byte, hasSURB bool) ([]byte, error) {
-	log.Debugf("OnRequest invoked, hasSURB is %v", hasSURB)
+func (e *Echo) OnRequest(id uint64, payload []byte, hasSURB bool) ([]byte, error) {
+	log.Debugf("OnRequest ID %d, hasSURB is %v", id, hasSURB)
 	if !hasSURB {
 		return nil, errors.New("request received without SURB, error")
 	}
 	return payload, nil
 }
 
-func (e *Echo) Parameters(unused []byte) (map[string]string, error) {
+func (e *Echo) Parameters() (map[string]string, error) {
 	return e.params, nil
 }
 
