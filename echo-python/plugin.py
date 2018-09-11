@@ -42,6 +42,9 @@ class EchoServicer(kaetzchen_pb2_grpc.KaetzchenServicer):
         self.logger.info("received request")
         return kaetzchen_pb2.Response(Payload=request.Payload)
 
+    def Parameters(self, empty, context):
+        return kaetzchen_pb2.Params()
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("-l", required=True, help="log directory")
