@@ -91,7 +91,7 @@ func (k *Currency) OnRequest(id uint64, payload []byte, hasSURB bool) ([]byte, e
 
 	err = k.sendTransaction(req.Tx)
 	if err != nil {
-		k.log.Debug("Failed to send currency transaction request: (%v)", err)
+		k.log.Debugf("Failed to send currency transaction request: (%v)", err)
 		return common.NewResponse(1, err.Error()).ToJson(), nil // XXX
 	}
 	return payload, nil
@@ -153,6 +153,9 @@ func New(cfg *config.Config) (*Currency, error) {
 
 	// Log to a file.
 	level, err := stringToLogLevel(cfg.LogLevel)
+	if err != nil {
+		return nil, err
+	}
 	logFile := path.Join(cfg.LogDir, fmt.Sprintf("currency-go.%d.log", os.Getpid()))
 	f, err := os.Create(logFile)
 	if err != nil {
