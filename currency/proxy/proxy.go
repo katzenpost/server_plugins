@@ -85,7 +85,7 @@ func (k *Currency) OnRequest(id uint64, payload []byte, hasSURB bool) ([]byte, e
 	// Send request to HTTP RPC.
 	req, err := common.RequestFromJson(k.ticker, payload)
 	if err != nil {
-		k.log.Debug("Failed to send currency transaction request: (%v)", err)
+		k.log.Debugf("Failed to send currency transaction request: (%v)", err)
 		return common.NewResponse(1, err.Error()).ToJson(), nil // XXX
 	}
 
