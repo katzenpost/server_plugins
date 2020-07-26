@@ -65,6 +65,10 @@ github.com/katzenpost/noise v0.0.0-20190907211420-4c2fa3a5d7a1 h1:bD6fNKhG5mnTWp
 github.com/katzenpost/noise v0.0.0-20190907211420-4c2fa3a5d7a1/go.mod h1:TqIOjVOESMlMl9Z+XElrJlY9gtBthOFpolLV3tA0vSg=
 github.com/katzenpost/server v0.0.12 h1:UQJ+SL9wEgu4leYRSmrxmqNw63AWGXuPigrtDbJQAwk=
 github.com/katzenpost/server v0.0.12/go.mod h1:6cQYA4eWIAiX+YBlPW+2K52BIAfJEQERsbfHbYhAdFg=
+github.com/katzenpost/server v0.0.13-0.20200725225946-a4e7893859fa h1:msHNIS4NrWK/u9HKFzmqxlpQvS33KNV7IBnZH1M1dII=
+github.com/katzenpost/server v0.0.13-0.20200725225946-a4e7893859fa/go.mod h1:6cQYA4eWIAiX+YBlPW+2K52BIAfJEQERsbfHbYhAdFg=
+github.com/katzenpost/server v0.0.13-0.20200725230618-a82221b9fe3f h1:u3KNN2p+GYpj4mca5vfkU5RMYt3QkY4T3b0FP7UG3ho=
+github.com/katzenpost/server v0.0.13-0.20200725230618-a82221b9fe3f/go.mod h1:6cQYA4eWIAiX+YBlPW+2K52BIAfJEQERsbfHbYhAdFg=
 github.com/konsorten/go-windows-terminal-sequences v1.0.1/go.mod h1:T0+1ngSBFLxvqU3pZ+m/2kptfBszLMUkC4ZK/EgS/cQ=
 github.com/kr/logfmt v0.0.0-20140226030751-b84e30acd515/go.mod h1:+0opPa2QZZtGFBFZlji/RkVcI2GknAs/DXo4wKdlNEc=
 github.com/kr/pretty v0.1.0/go.mod h1:dAy3ld7l9f0ibDNOQOHHMYYIIbhfbHSm3C4ZsoJORNo=
