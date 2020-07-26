@@ -1,5 +1,5 @@
-// main.go - echo service using cbor plugin system
-// Copyright (C) 2018  David Stainton.
+// main.go - test echo service using pubsub plugin system
+// Copyright (C) 2020  David Stainton.
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Affero General Public License as
